@@ -256,6 +256,43 @@ function solution38(data) {
 }
 ```
 
+JavaScript의 URL 객체는 URL을 파싱하고 조작하는 데 사용되는 내장 객체입니다. 이 객체를 사용하면 URL의 다양한 구성 요소를 쉽게 추출하고 수정할 수 있습니다.
+
+1. `href`: 전체 URL 문자열
+2. `protocol`: URL의 프로토콜 (예: "http:", "https:")
+3. `host`: 호스트 이름과 포트
+4. `hostname`: 호스트 이름
+5. `port`: 포트 번호
+6. `pathname`: 경로
+7. `search`: 쿼리 문자열
+8. `hash`: 프래그먼트 식별자
+
+```js
+// URL 객체 생성
+const url = new URL('https://www.example.com:8080/path/to/page?name=John&age=30#section1');
+
+// URL 구성 요소 출력
+console.log('전체 URL:', url.href);
+console.log('프로토콜:', url.protocol);
+console.log('호스트:', url.host);
+console.log('호스트 이름:', url.hostname);
+console.log('포트:', url.port);
+console.log('경로:', url.pathname);
+console.log('쿼리 문자열:', url.search);
+console.log('해시:', url.hash);
+
+// 쿼리 파라미터 조작
+console.log('name 파라미터:', url.searchParams.get('name'));
+url.searchParams.set('name', 'Jane');
+console.log('수정된 name 파라미터:', url.searchParams.get('name'));
+
+// 새로운 URL 구성 요소 설정
+url.protocol = 'http:';
+url.port = '3000';
+
+console.log('수정된 전체 URL:', url.href);
+```
+
 
 ## 중복된 숫자 개수
 - 링크: https://school.programmers.co.kr/learn/courses/30/lessons/120583
