@@ -8,6 +8,8 @@
 * [Python 알고리즘 Lv0 영상](https://www.youtube.com/watch?v=vmQb3wGF5-E&list=PLkfUwwo13dlVwxjSCn7GUM6QoV-GIEFN1)
 * [jsalgo](https://github.com/weniv/jsalgo_solution)
 * [pyalgo](https://github.com/weniv/pyalgo_solution)
+* [jsalgo100](https://github.com/weniv/javascript100/blob/main/src/py/answer_sample.js)
+* [pyalgo100](https://github.com/weniv/pythonalgo100/blob/main/src/py/answer_sample.py)
 
 ## 강의 주의사항
 * 위니브 강사진들이 강의할 때 주의사항입니다.
