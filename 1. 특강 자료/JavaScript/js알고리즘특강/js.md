@@ -1,5 +1,6 @@
 * 현재 repo 주소: https://github.com/paullabkorea/Algorithm-walk-with-wenivs
 * 이력서 템플릿: https://paullabworkspace.notion.site/Figma-bfa32213fc244db9b31bb8486a479ee6?pvs=4
+* jsalgo: https://100.jsalgo.co.kr/
 
 # 1. 자료구조와 알고리즘, 코딩테스트
 * 자료구조(자료를 어떻게 담는가?): array, object, map, set, 싱글 링크드 리스트, 더블 링크드 리스트, 트리, 해쉬 등
@@ -76,7 +77,7 @@
                 * 힙
                 * 트라이
 
-## 간단한 코드 스니펫
+# 2. 간단한 코드 스니펫
 ```js
 // 1. python에서 유용한 코드를 js 모듈화
 
@@ -159,6 +160,8 @@ Math.floor(10 / 3);
 '2345678910111213'.match(/1/g).length
 'hello leehojun my name hojun'.match(/hojun/g).length
 ```
+
+# 3. 알고리즘 문제 풀이
 
 ## 2진수, 8진수, 16진수, 10진수
 ```js
@@ -823,4 +826,986 @@ solution([1, 1, 1, 2, 3, 4, 1, 2, 3, 4, 1])
 // 그냥 슬라이싱(슬라이딩 윈도우 알고리즘)을 하면 1개지만
 // 스택을 이용하면 2개
 solution([1, 1, 2, 1, 2, 3, 4, 1, 3, 4, 1])
+```
+
+# 4. 중요 알고리즘 설명
+
+해당 강의는 시간이 남는 경우 진행합니다. 시간이 부족한 경우에는 진행하지 않습니다.
+
+## 4.1 연결리스트
+
+-   연결리스트, 메모리 효율을 위해 사용되는 경우가 많음
+-   js에서는 그다지 메모리 효율이 좋지 못함
+-   개념 : https://en.wikipedia.org/wiki/Linked_list
+-   알고리즘 시각화 : https://visualgo.net/ko
+
+1. step 1 - object로 linkedlist 구현
+
+```javascript
+// 여러분이 다 이해하실 수 있는 코드로 설명해보겠습니다.
+const list = {
+    head: {
+        value: 46,
+        next: {
+            value: 49,
+            next: {
+                value: 97,
+                next: {
+                    value: 12,
+                    next: null,
+                },
+            },
+        },
+    },
+};
+// list.head.next.next.value
+// list.head.next.next.next.value
+
+let list = {
+    head: null,
+};
+
+let node1 = { value: 46, next: null };
+let node2 = { value: 49, next: null };
+let node3 = { value: 97, next: null };
+let node4 = { value: 12, next: null };
+
+node1.next = node2;
+node2.next = node3;
+node3.next = node4;
+
+list.head = node1;
+
+// let node4 = {value: 12, next: null}
+// let node3 = {value: 97, next: node4}
+// let node2 = {value: 49, next: node3}
+// let node1 = {value: 46, next: node2}
+```
+
+* 순회
+    ```js
+    let current = node1
+    while current:
+        console.log(current.data)
+        current = current.next
+    ```
+
+-   문제
+
+```js
+// head -> [90, next] -> [2, next] -> [77, next] -> [35, next] -> [21, next] -> null
+// 35를 출력해주세요.
+const list = {
+    head: {
+        value: 90,
+        next: {
+            value: 2,
+            next: {
+                value: 77,
+                next: {
+                    value: 35,
+                    next: {
+                        value: 21,
+                        next: null,
+                    },
+                },
+            },
+        },
+    },
+};
+list.head.next.next.next.value;
+```
+
+2. step 2 - class로 node 구현
+
+```javascript
+// 위 문제 처럼 만들어 보도록 하겠습니다.
+// head -> [90, next] -> [2, next] -> [77, next] -> [35, next] -> [21, next] -> null
+// 35를 출력해주세요.
+class Node {
+    constructor(data) {
+        this.data = data;
+        this.next = null;
+    }
+}
+
+node1 = new Node(90);
+node2 = new Node(2);
+node3 = new Node(77);
+node4 = new Node(35);
+node5 = new Node(21);
+
+node1.next = node2;
+node2.next = node3;
+node3.next = node4;
+node4.next = node5;
+
+node1.data;
+// 90
+node1.next.next.data;
+// 77
+node1.next.next.next.data;
+// 35
+```
+
+3. step 3 - class로 linkedList 구현
+
+```js
+// head -> ['init', next]
+//               ↑
+//              tail
+
+// head -> ['init', next] -> [90, next]
+//                               ↑
+//                              tail
+class Node {
+    constructor(data) {
+        this.data = data;
+        this.next = null;
+    }
+}
+
+class LinkedList {
+    constructor() {
+        let init = new Node("init");
+        this.head = init;
+        this.tail = init;
+    }
+
+    append(data) {
+        let 새로운노드 = new Node(data);
+        // 마지막 값(null)은 새로운 노드가 됨
+        this.tail.next = 새로운노드;
+        // 마지막 노드는 새로운 노드가 됨
+        this.tail = 새로운노드;
+    }
+}
+
+l = new LinkedList();
+l.append(1);
+l.append(2);
+l.append(3);
+l.append(10);
+l.append(20);
+l.append(30);
+
+// l.head.data
+// 'init'
+// l.head.next.data
+// 1
+// l.head.next.next.data
+// 2
+// l.head.next.next.next.data
+// 3
+
+// 새로운노드 = node(1, null)
+// init.next 값은 null인데! null자리를 '새로운노드node(1, null)'로!
+// this.tail은 이제 node(1, null)
+//
+// 새로운노드 = node(2, null)
+// node(1, null).next 값은 null인데! null자리를 '새로운노드node(2, null)'로!
+// node(1, null) = 새로운노드node(2, null)
+//
+// 새로운노드 = node(3, null)
+// node(2, null).next값은 null인데! null자리를 '새로운노드node(3, null)'로!
+// node(2, null) = 새로운노드node(3, null)
+```
+
+4. step 4 - class로 linkedList에서 length 구현
+
+```js
+// head -> ['init', next]
+//               ↑
+//              tail
+
+// head -> ['init', next] -> [90, next]
+//                               ↑
+//                              tail
+
+// 여기서 데이터를 추가하면 생성되는 노드마다 데이터 공간이 할당되는 것이라 메모리가 크게 필요하게 됩니다.
+class Node {
+    constructor(data) {
+        this.data = data;
+        this.next = null;
+    }
+}
+
+class LinkedList {
+    constructor() {
+        let init = new Node("init");
+        this.head = init;
+        this.tail = init;
+        this.length = 0;
+    }
+
+    // length() { //this.length가 덮어 씀
+    //     return this.length;
+    // }
+
+    append(data) {
+        let 새로운노드 = new Node(data);
+        // 마지막 값(null)은 새로운 노드가 됨
+        this.tail.next = 새로운노드;
+        // 마지막 노드는 새로운 노드가 됨
+        this.tail = 새로운노드;
+        this.length += 1;
+    }
+}
+
+l = new LinkedList();
+l.append(1);
+l.append(2);
+l.append(3);
+l.append(10);
+l.append(20);
+l.append(30);
+```
+
+5. step 5 - class로 linkedList에서 toString 구현
+
+```js
+class Node {
+    constructor(data) {
+        this.data = data;
+        this.next = null;
+    }
+}
+
+class LinkedList {
+    constructor() {
+        let init = new Node("init");
+        this.head = init;
+        this.tail = init;
+        this.length = 0;
+        this.displayData = "";
+    }
+
+    // length() { //this.length가 덮어 씀
+    //     return this.length;
+    // }
+
+    toString() {
+        return "<" + this.displayData.slice(0, -2) + ">";
+    }
+
+    append(data) {
+        let 새로운노드 = new Node(data);
+        // 마지막 값(null)은 새로운 노드가 됨
+        this.tail.next = 새로운노드;
+        // 마지막 노드는 새로운 노드가 됨
+        this.tail = 새로운노드;
+        this.length += 1;
+        this.displayData += `${data}, `;
+    }
+}
+
+l = new LinkedList();
+l.append(1);
+l.append(2);
+l.append(3);
+l.append(10);
+l.append(20);
+l.append(30);
+```
+
+6. step 6 - class로 linkedList에서 toArray 구현
+
+```js
+class Node {
+    constructor(data) {
+        this.data = data;
+        this.next = null;
+    }
+}
+
+class LinkedList {
+    constructor() {
+        let init = new Node("init");
+        this.head = init;
+        this.tail = init;
+        this.length = 0;
+        this.displayData = "";
+        this.displayDataArr = [];
+    }
+
+    // length() { //this.length가 덮어 씀
+    //     return this.length;
+    // }
+
+    toString() {
+        return "<" + this.displayData.slice(0, -2) + ">";
+    }
+
+    toArray() {
+        return this.displayDataArr;
+    }
+
+    append(data) {
+        let 새로운노드 = new Node(data);
+        // 마지막 값(null)은 새로운 노드가 됨
+        this.tail.next = 새로운노드;
+        // 마지막 노드는 새로운 노드가 됨
+        this.tail = 새로운노드;
+        this.length += 1;
+        this.displayData += `${data}, `;
+        this.displayDataArr.push(data);
+    }
+}
+
+l = new LinkedList();
+l.append(1);
+l.append(2);
+l.append(3);
+l.append(10);
+l.append(20);
+l.append(30);
+```
+
+7. step 7 - (중요) toString을 순회로 구현
+
+```js
+class Node {
+    constructor(data) {
+        this.data = data;
+        this.next = null;
+    }
+}
+
+class LinkedList {
+    constructor() {
+        let init = new Node("init");
+        this.head = init;
+        this.tail = init;
+        this.length = 0;
+    }
+
+    // length() { //this.length가 덮어 씀
+    //     return this.length;
+    // }
+
+    toString() {
+        let 순회용현재노드 = this.head;
+
+        //처음 순회용 현재 노드가 init이기 때문에
+        순회용현재노드 = 순회용현재노드.next;
+
+        let 출력데이터 = "";
+        for (let i = 0; i < this.length; i++) {
+            출력데이터 += `${순회용현재노드.data}, `;
+            순회용현재노드 = 순회용현재노드.next;
+        }
+
+        return 출력데이터;
+    }
+
+    append(data) {
+        let 새로운노드 = new Node(data);
+        // 마지막 값(null)은 새로운 노드가 됨
+        this.tail.next = 새로운노드;
+        // 마지막 노드는 새로운 노드가 됨
+        this.tail = 새로운노드;
+        this.length += 1;
+    }
+}
+
+l = new LinkedList();
+l.append(1);
+l.append(2);
+l.append(3);
+l.append(10);
+l.append(20);
+l.append(30);
+```
+
+8. step 8 - data를 arr로 만들기
+
+```js
+class Node {
+    constructor(data) {
+        this.data = data;
+        this.next = null;
+    }
+}
+
+class LinkedList {
+    constructor() {
+        let init = new Node("init");
+        this.head = init;
+        this.tail = init;
+        this.length = 0;
+    }
+
+    // length() { //this.length가 덮어 씀
+    //     return this.length;
+    // }
+
+    toString() {
+        let 순회용현재노드 = this.head;
+
+        //처음 순회용 현재 노드가 init이기 때문에
+        순회용현재노드 = 순회용현재노드.next;
+
+        let 출력데이터 = "";
+        for (let i = 0; i < this.length; i++) {
+            출력데이터 += `${순회용현재노드.data}, `;
+            순회용현재노드 = 순회용현재노드.next;
+        }
+
+        // return 출력데이터;
+        return "[" + 출력데이터.slice(0, -2) + "]";
+    }
+
+    fullData() {
+        return JSON.parse(this.toString());
+    }
+
+    append(data) {
+        let 새로운노드 = new Node(data);
+        // 마지막 값(null)은 새로운 노드가 됨
+        this.tail.next = 새로운노드;
+        // 마지막 노드는 새로운 노드가 됨
+        this.tail = 새로운노드;
+        this.length += 1;
+    }
+}
+
+l = new LinkedList();
+l.append(1);
+l.append(2);
+l.append(3);
+l.append(10);
+l.append(20);
+l.append(30);
+```
+
+9. step 9 - linked list에 node 삽입하기
+
+```js
+class Node {
+    constructor(data) {
+        this.data = data;
+        this.next = null;
+    }
+}
+
+class LinkedList {
+    constructor() {
+        let init = new Node("init");
+        this.head = init;
+        this.tail = init;
+        this.length = 0;
+    }
+
+    // length() { //this.length가 덮어 씀
+    //     return this.length;
+    // }
+
+    toString() {
+        let 순회용현재노드 = this.head;
+
+        //처음 순회용 현재 노드가 init이기 때문에
+        순회용현재노드 = 순회용현재노드.next;
+
+        let 출력데이터 = "";
+        for (let i = 0; i < this.length; i++) {
+            출력데이터 += `${순회용현재노드.data}, `;
+            순회용현재노드 = 순회용현재노드.next;
+        }
+
+        // return 출력데이터;
+        return "[" + 출력데이터.slice(0, -2) + "]";
+    }
+
+    fullData() {
+        return JSON.parse(this.toString());
+    }
+
+    append(data) {
+        let 새로운노드 = new Node(data);
+        // 마지막 값(null)은 새로운 노드가 됨
+        this.tail.next = 새로운노드;
+        // 마지막 노드는 새로운 노드가 됨
+        this.tail = 새로운노드;
+        this.length += 1;
+    }
+
+    insert(index, data) {
+        let 순회용현재노드 = this.head;
+        순회용현재노드 = 순회용현재노드.next;
+
+        for (let i = 0; i < index - 1; i++) {
+            순회용현재노드 = 순회용현재노드.next;
+        }
+
+        let 새로운노드 = new Node(data);
+        새로운노드.next = 순회용현재노드.next;
+        순회용현재노드.next = 새로운노드;
+        this.length += 1;
+    }
+}
+
+l = new LinkedList();
+l.append(1);
+l.append(2);
+l.append(3);
+l.append(10);
+l.append(20);
+l.append(30);
+```
+
+10. Double linked list의 기본 형태
+
+```js
+const list = {
+    head: null,
+};
+
+let list1 = { value: 12, next: null, pre: null };
+let list2 = { value: 99, next: null, pre: null };
+let list3 = { value: 37, next: null, pre: null };
+let list4 = { value: 2, next: null, pre: null };
+
+list.head = list1;
+list1.next = list2;
+list2.next = list3;
+list3.next = list4;
+
+list1.pre = list;
+list2.pre = list1;
+list3.pre = list2;
+list4.pre = list3;
+
+list1.next.next.value;
+// 37
+list3.pre.pre.value;
+// 12
+list4.pre.pre.pre.next.next.value;
+// 37
+```
+
+```js
+class Node {
+    constructor(data) {
+        this.data = data;
+        this.next = null;
+        this.pre = null;
+    }
+}
+
+class DoubleLinkedList {
+    constructor() {
+        let init = new Node("init");
+        this.head = init;
+        this.tail = init;
+    }
+
+    append(data) {
+        let 새로운노드 = new Node(data);
+
+        this.tail.next = 새로운노드;
+        새로운노드.pre = this.tail;
+
+        this.tail = 새로운노드;
+    }
+}
+
+l = new DoubleLinkedList();
+l.append(1);
+l.append(2);
+l.append(3);
+l.append(10);
+l.append(20);
+l.append(30);
+```
+
+## 4.2 트리와 그래프
+
+-   tree object로 구현하기(이미지 : tree만들기\_트리순회\_2.png)
+
+```js
+// 초벌작업
+// 이진 트리의 기본형태
+// value
+// child - left
+// child - right
+const tree = {
+    root: {
+        value: 5,
+        left: {
+            value: 3,
+            left: null,
+            right: null,
+        },
+        right: {
+            value: 8,
+            left: null,
+            right: null,
+        },
+    },
+};
+
+//문제 : tree만들기_트리순회_2.png를 보고 tree를 만드세요.
+const tree = {
+    root: {
+        value: 5,
+        left: {
+            value: 3,
+            left: {
+                value: 1,
+                left: null,
+                right: null,
+            },
+            right: {
+                value: 4,
+                left: null,
+                right: null,
+            },
+        },
+        right: {
+            value: 8,
+            left: {
+                value: 6,
+                left: null,
+                right: null,
+            },
+            right: {
+                value: 9,
+                left: null,
+                right: null,
+            },
+        },
+    },
+};
+
+//문제 : tree만들기.png를 보고 tree를 만드세요.
+
+const tree = {
+    root: {
+        value: 55,
+        left: {
+            value: 30,
+            left: {
+                value: 25,
+                left: {
+                    value: 21,
+                    left: null,
+                    right: null,
+                },
+                right: null,
+            },
+            right: {
+                value: 37,
+                left: null,
+                right: null,
+            },
+        },
+        right: {
+            value: 70,
+            left: {
+                value: 75,
+                left: null,
+                right: null,
+            },
+            right: {
+                value: 77,
+                left: null,
+                right: {
+                    value: 80,
+                    left: null,
+                    right: null,
+                },
+            },
+        },
+    },
+};
+
+tree.root.value;
+// 55
+tree.root.right.value;
+// 70
+tree.root.right.right.value[
+    // 77
+
+    // object나 array(기존 자료형)로 tree나 linked list를 구현할 수 있는데 왜 class로 구현할까요?
+    (5, [3, [1, [], []], [4, [], []]], [8, [6, [], []], [9, [], []]])
+];
+
+// 1. 더 lite한 모델을 만들기 위해
+// 2. 확장성(메서드 같은 것을 만들 수 있음)
+// 3. OOP(Object-Oriented Programming, 객체 지향 프로그래밍)에 철학에 맞기 때문에
+
+// node를 만들어서 삽입하는 식으로 구현
+const root = {
+    value: 55,
+    left: null,
+    right: null,
+};
+
+node1 = { value: 53, left: null, right: null };
+node2 = { value: 99, left: null, right: null };
+node3 = { value: 37, left: null, right: null };
+node4 = { value: 54, left: null, right: null };
+
+root.left = node1;
+root.right = node2;
+
+node1.left = node3;
+node1.right = node4;
+
+root.value;
+// 55
+root.right.value;
+// 99
+root.left.value;
+// 53
+root.left.left.value;
+// 37
+```
+
+-   tree를 class로 구현하기(이미지 : tree만들기\_트리순회\_.png)
+
+```js
+class Node {
+    constructor(data) {
+        this.data = data;
+        // this.child = [] // 2진트리가 아닌 트리를 만들 때 사용할 수 있습니다.
+        this.left = null;
+        this.right = null;
+    }
+}
+
+root = new Node(55);
+node1 = new Node(53);
+node2 = new Node(99);
+node3 = new Node(37);
+node4 = new Node(54);
+
+root.left = node1;
+root.right = node2;
+
+node1.left = node3;
+node1.right = node4;
+
+root.data;
+// 55
+root.left.data;
+// 53
+root.left.left.data;
+// 37
+root.left.right.data;
+// 54
+```
+
+-   트리 구현(완벽한 이진트리가 아닙니다.)
+
+```js
+class Node {
+    constructor(data) {
+        this.data = data;
+        // this.child = [] // 2진트리가 아닌 트리를 만들 때 사용할 수 있습니다.
+        this.left = null;
+        this.right = null;
+    }
+}
+
+class Tree {
+    constructor(data) {
+        let init = new Node(data);
+        this.root = init;
+        this.length = 0;
+    }
+
+    // length(){ // this.length와 이름이 같아서 작동하지 않습니다.
+    //     return this.length
+    // }
+
+    insert(data) {
+        let 새로운노드 = new Node(data);
+        let 순회용현재노드 = this.root;
+
+        while (순회용현재노드) {
+            if (data == 순회용현재노드.data) {
+                // 들어온 값이 존재하는 값이면 트리에 값을 추가하지 않습니다.
+                return;
+            } else if (data < 순회용현재노드.data) {
+                // 들어온 데이터가 작은 경우 왼쪽에 붙여야 합니다!
+                // 해당 데이터 부분이 비어있으면 데이터를 넣고, 비어있지 않으면 계속 타고 내려가야 합니다.
+                if (!순회용현재노드.left) {
+                    순회용현재노드.left = 새로운노드;
+                    this.length += 1;
+                    return;
+                }
+                순회용현재노드 = 순회용현재노드.left;
+            } else if (data > 순회용현재노드.data) {
+                // 들어온 데이터가 큰 경우 오른쪽에 붙여야 합니다!
+                // 해당 데이터 부분이 비어있으면 데이터를 넣고, 비어있지 않으면 계속 타고 내려가야 합니다.
+                if (!순회용현재노드.right) {
+                    순회용현재노드.right = 새로운노드;
+                    this.length += 1;
+                    return;
+                }
+                순회용현재노드 = 순회용현재노드.right;
+            }
+        }
+    }
+}
+
+let t = new Tree(5);
+t.insert(3);
+t.insert(8);
+t.insert(1);
+t.insert(4);
+t.insert(6);
+t.insert(9);
+```
+
+-   데이터 삽입
+
+```js
+class Node {
+    constructor(data) {
+        this.data = data;
+        // this.child = [] // 2진트리가 아닌 트리를 만들 때 사용할 수 있습니다.
+        this.left = null;
+        this.right = null;
+    }
+}
+
+class Tree {
+    constructor(data) {
+        let init = new Node(data);
+        this.root = init;
+        this.length = 0;
+    }
+
+    insert(data) {
+        let 새로운노드 = new Node(data);
+        let 순회용현재노드 = this.root;
+
+        while (순회용현재노드) {
+            if (data == 순회용현재노드.data) {
+                return;
+            } else if (data < 순회용현재노드.data) {
+                if (!순회용현재노드.left) {
+                    순회용현재노드.left = 새로운노드;
+                    this.length += 1;
+                    return;
+                }
+                순회용현재노드 = 순회용현재노드.left;
+            } else if (data > 순회용현재노드.data) {
+                if (!순회용현재노드.right) {
+                    순회용현재노드.right = 새로운노드;
+                    this.length += 1;
+                    return;
+                }
+                순회용현재노드 = 순회용현재노드.right;
+            }
+        }
+    }
+}
+let t = new Tree(5);
+t.insert(3);
+t.insert(8);
+t.insert(1);
+t.insert(4);
+t.insert(6);
+t.insert(9);
+```
+
+-   트리 순회
+
+```js
+class Node {
+    constructor(data) {
+        this.data = data;
+        // this.child = [] // 2진트리가 아닌 트리를 만들 때 사용할 수 있습니다.
+        this.left = null;
+        this.right = null;
+    }
+}
+
+class Tree {
+    constructor(data) {
+        let init = new Node(data);
+        this.root = init;
+        this.length = 0;
+    }
+
+    insert(data) {
+        let 새로운노드 = new Node(data);
+        let 순회용현재노드 = this.root;
+
+        while (순회용현재노드) {
+            if (data == 순회용현재노드.data) {
+                return;
+            } else if (data < 순회용현재노드.data) {
+                if (!순회용현재노드.left) {
+                    순회용현재노드.left = 새로운노드;
+                    this.length += 1;
+                    return;
+                }
+                순회용현재노드 = 순회용현재노드.left;
+            } else if (data > 순회용현재노드.data) {
+                if (!순회용현재노드.right) {
+                    순회용현재노드.right = 새로운노드;
+                    this.length += 1;
+                    return;
+                }
+                순회용현재노드 = 순회용현재노드.right;
+            }
+        }
+    }
+
+    //깊스너큐
+    DFS() {
+        // 깊이우선탐색, DFS(Depth First Search)
+        // Stack 이용!
+        let 방문경로 = [];
+        let 스택 = [this.root];
+
+        while (스택.length !== 0) {
+            let current = 스택.pop();
+            if (current.right) {
+                스택.push(current.right);
+            }
+            if (current.left) {
+                스택.push(current.left);
+            }
+            방문경로.push(current.data);
+        }
+
+        return 방문경로;
+    }
+
+    BFS() {
+        // 너비우선탐색, BFS(Breadth First Search)
+        // Queue 이용!
+        let 방문경로 = [];
+        let 큐 = [this.root];
+
+        while (큐.length !== 0) {
+            let current = 큐.shift();
+            if (current.right) {
+                큐.push(current.right);
+            }
+            if (current.left) {
+                큐.push(current.left);
+            }
+            방문경로.push(current.data);
+        }
+
+        return 방문경로;
+    }
+}
+
+let t = new Tree(5);
+t.insert(3);
+t.insert(8);
+t.insert(1);
+t.insert(4);
+t.insert(6);
+t.insert(9);
+
+t.DFS();
+t.BFS();
 ```
